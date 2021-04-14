@@ -1,42 +1,67 @@
 const Producer = require('../models').Producer;
 
 class ProducerController {
-  async getAll() {
-    return Producer.findAll();
+  async getAll(_, res) {
+    const producers = await Producer.findAll();
+    res.json(producers);
   }
 
-  async getById(id) {
-    return Producer.findByPk(id);
+  async getById(req, res) {
+    const producer = await Producer.findByPk(req.params.id);
+    if (!producer) {
+      res.status(404).json('not found').end();
+      return;
+    }
+    res.json(producer);
   }
 
-  async add(firstName, lastName) {
+  async add(req, res) {
     try {
+      const { firstName, lastName } = req.body;
+      if (!firstName || !lastName) {
+        res.status(400).end();
+      }
       const newProducer = await Producer.create({
         firstName,
         lastName,
       });
-      return newProducer;
+
+      res.status(201).json(newProducer);
+      return;
     } catch (error) {
       console.log(error);
     }
   }
-
-  async update(id, payload) {
+  
+  async update(req, res) {
+    if (!req.body.firstName && !req.body.lastName) {
+      res.status(404).json({ error: 'Producer does not exist' });
+      return;
+    }
     try {
-      const updatedProducer = await Producer.update(payload, {
+      const updatedProducer = await Producer.update(req.body, {
         where: {
-          id: id,
+          id: req.params.id,
         },
       });
-      return updatedProducer;
+      if (updatedProducer[0] === 1) {
+        res.json(await Producer.findByPk(req.params.id));
+        return;
+      }
+      res.status(404).json({ error: 'Producer does not exist' });
     } catch (error) {
       console.log(error);
     }
   }
 
-  async delete(id) {
+  async delete(req, res) {
     try {
-      return await Producer.destroy({ where: { id: id } });
+      const success = await Producer.destroy({ where: { id: req.params.id } });
+      if (!success) {
+        res.status(404).josn({ error: 'Producer not found' });
+        return;
+      }
+      res.status(204).end();
     } catch (error) {}
   }
 }
