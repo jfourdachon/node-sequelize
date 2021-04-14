@@ -1,3 +1,5 @@
+
 module.exports = {
-    ProducerController: require('./ProducerController')
+    ProducerController: require('./ProducerController'),
+    MovieController: require('./MovieController')
 };

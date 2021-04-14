@@ -32,7 +32,7 @@ class ProducerController {
       console.log(error);
     }
   }
-  
+
   async update(req, res) {
     if (!req.body.firstName && !req.body.lastName) {
       res.status(404).json({ error: 'Producer does not exist' });
@@ -58,7 +58,7 @@ class ProducerController {
     try {
       const success = await Producer.destroy({ where: { id: req.params.id } });
       if (!success) {
-        res.status(404).josn({ error: 'Producer not found' });
+        res.status(404).json({ error: 'Producer not found' });
         return;
       }
       res.status(204).end();
