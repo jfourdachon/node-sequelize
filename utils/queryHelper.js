@@ -45,14 +45,12 @@ exports.queryHelper = async (limit, page, search, searchKey, model, include, end
 
   let newResult = []
 
-  result.rows.forEach((row, key) => {
-    const {Movies, ...datas} = row
-    newResult.push(datas)
-    row.Movies.forEach((movie, index) => {
-        console.log(newResult[key])
-        newResult[key]['Movies'][index] = {url: `${baseUrl}/movies/${movie.id}`} 
+  result.rows.map(row => {
+    const obj = {id: row.id, firstName: row.firstName, lastName: row.lastName, createdAt: row.createdAt, updatedAt: row.updatedAt, Movies: []}
+    row.Movies.map(movie => {
+        obj.Movies.push({url: `${baseUrl}/movies/${movie.id}`}) 
     });
-    return newResult
+     newResult.push(obj)
   });
 
   return newResult;
