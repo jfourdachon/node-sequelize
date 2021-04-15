@@ -4,10 +4,10 @@ const {paginate} = require('../utils/queryHelper');
 
 class MovieController {
   async getAll(req, res) {
-    const offset = req.query.page ? req.query.page : 1;
+    const page = req.query.page ? req.query.page : 1;
     const limit = req.query.limit ? req.query.limit : 15;
     // const movies = await Movie.findAndCountAll({ limit, offset, include: [Genre] });
-    const result = await paginate(+limit, +offset, Movie, Genre, 'movies');
+    const result = await paginate(+limit, +page, Movie, Genre, 'movies');
     res.json(result);
   }
 
