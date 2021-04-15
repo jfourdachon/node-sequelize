@@ -18,7 +18,7 @@ class MovieController {
   async add(req, res) {
     try {
       const { title, description, year } = req.body;
-      if (!firstName || !lastName) {
+      if (!title || !description | !year) {
         res.status(400).end();
       }
       const newMovie = await Movie.create({
@@ -35,8 +35,8 @@ class MovieController {
   }
   
   async update(req, res) {
-    if (!req.body.firstName && !req.body.lastName) {
-      res.status(404).json({ error: 'Producer does not exist' });
+    if (!req.body.title && !req.body.description && !req.body.year) {
+      res.status(404).json({ error: 'Please provide at least on parameter to update the movie' });
       return;
     }
     try {
