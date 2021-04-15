@@ -1,8 +1,6 @@
 const { Op } = require('sequelize');
 
 const pagination = (limit, page, result, endpoint, baseUrl) => {
-  // const offset = (page - 1) * limit;
-  // const result = await model.findAndCountAll({ where: searchQuery, limit, offset, include: [include] });
   const url = `${baseUrl}/${endpoint}?page=`;
   const last = Math.ceil(result.count / limit);
   const self = page;
@@ -17,7 +15,43 @@ const pagination = (limit, page, result, endpoint, baseUrl) => {
   };
 };
 
-exports.queryHelper = async (limit, page, search, searchKey, model, include, endpoint, genre = false) => {
+const populate = (result, endpoint, baseUrl) => {
+  let newResult = [];
+  result.rows.map((row) => {
+    // populate movies url in Producer
+    if (endpoint === 'producers') {
+      const obj = {
+        id: row.id,
+        firstName: row.firstName,
+        lastName: row.lastName,
+        createdAt: row.createdAt,
+        updatedAt: row.updatedAt,
+        Movies: [],
+      };
+      row.Movies.map((movie) => {
+        obj.Movies.push({ url: `${baseUrl}/movies/${movie.id}` });
+      });
+      newResult.push(obj);
+    } else if (endpoint === 'movies') {
+      // populate producer url in Movie
+      const obj = {
+        id: row.id,
+        title: row.title,
+        description: row.description,
+        year: row.year,
+        createdAt: row.createdAt,
+        updatedAt: row.updatedAt,
+        genre: row.Genre,
+        producer: '',
+      };
+      obj.producer = `${baseUrl}/producers/${row.producerId}`;
+      newResult.push(obj);
+    }
+  });
+  return newResult;
+};
+
+exports.queryHelper = async (limit, page, search, searchKey, model, include, endpoint, order, orderBy, genre = false) => {
   const baseUrl = 'http://localhost:3000/api';
 
   const searchQuery =
@@ -33,25 +67,22 @@ exports.queryHelper = async (limit, page, search, searchKey, model, include, end
     searchQuery['genreId'] = +genre;
   }
 
+
+  const orderQuery = order && orderBy ? [[orderBy, order]] : [];
+
   const offset = (page - 1) * limit;
   let result = await model.findAndCountAll({
+    order: orderQuery,
     where: searchQuery,
     limit,
     offset,
     include: [{ model: include, attributes: ['id'] }],
   });
 
-  pagination(limit, page, result, endpoint, result);
 
-  let newResult = []
+  pagination(limit, page, result, endpoint, baseUrl);
 
-  result.rows.map(row => {
-    const obj = {id: row.id, firstName: row.firstName, lastName: row.lastName, createdAt: row.createdAt, updatedAt: row.updatedAt, Movies: []}
-    row.Movies.map(movie => {
-        obj.Movies.push({url: `${baseUrl}/movies/${movie.id}`}) 
-    });
-     newResult.push(obj)
-  });
+  const newResult = populate(result, endpoint, baseUrl);
 
   return newResult;
 };

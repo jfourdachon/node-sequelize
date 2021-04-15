@@ -4,10 +4,10 @@ const {queryHelper} = require('../utils/queryHelper');
 
 class ProducerController {
   async getAll(req, res) {
-    const { search, searchKey } = req.query;
+    const { search, searchKey, order, orderBy } = req.query;
     const page = req.query.page ? req.query.page : 1;
     const limit = req.query.limit ? req.query.limit : 15;
-    const result = await queryHelper(+limit, +page, search, searchKey, Producer, Movie, 'producers');
+    const result = await queryHelper(+limit, +page, search, searchKey, Producer, Movie, 'producers', order, orderBy );
 
     res.json(result);
   }

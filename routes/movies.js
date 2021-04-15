@@ -1,9 +1,10 @@
 const express = require('express');
 const MovieController = require('../controllers').MovieController;
+const Validator = require('../middlewares').Validator
 
 const router = express.Router();
 
-router.get('/movies', MovieController.getAll);
+router.get('/movies', Validator.filterMoviesRules(), Validator.validate, MovieController.getAll);
 
 router.get('/movies/:id', MovieController.getById);
 
