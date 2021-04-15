@@ -22,14 +22,21 @@ class MovieController {
 
   async add(req, res) {
     try {
-      const { title, description, year } = req.body;
-      if (!title || !description | !year) {
+      const { title, description, year, genre } = req.body;
+      if (!title || !description | !year || !genre) {
         res.status(400).end();
       }
+      const checkGenre = await Genre.findByPk(+genre);
+      if (!checkGenre) {
+        res.status(404).json('Genre not exist').end();
+        return;
+      }
+
       const newMovie = await Movie.create({
         title,
         description,
-        year: +year
+        year: +year,
+        genreId: +genre
       });
 
       res.status(201).json(newMovie);
