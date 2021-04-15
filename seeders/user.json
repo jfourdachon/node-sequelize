@@ -1,0 +1,5 @@
+[
+    {"email":"admin@admin.com","password":"$2y$10$zTozCwaEvaHWqZW0L46OUe0hHoeP99nvTD.MUGEnoY4c5Xw11yUv2","role":"admin","createdAt":"3/9/2021","updatedAt":"12/25/2020"},
+    {"email":"user@user.com","password":"$2y$10$GSmDmv/krPaYRswB3pQbieIbj1b6Dd6.LqP1R0eHK2U/NPmzyIKsy","role":"user","createdAt":"6/30/2020","updatedAt":"4/6/2021"},
+    {"email":"student@student.com","password":"$2y$10$SkqcfZCdkr9I8n5.YlMi5esroj0JFin3pY/wBUWOLMQgVHea.DtT6","role":"student","createdAt":"6/19/2020","updatedAt":"12/27/2020"}
+]
