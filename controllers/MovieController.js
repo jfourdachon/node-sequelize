@@ -6,7 +6,6 @@ class MovieController {
   async getAll(req, res) {
     const page = req.query.page ? req.query.page : 1;
     const limit = req.query.limit ? req.query.limit : 15;
-    // const movies = await Movie.findAndCountAll({ limit, offset, include: [Genre] });
     const result = await paginate(+limit, +page, Movie, Genre, 'movies');
     res.json(result);
   }
