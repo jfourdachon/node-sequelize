@@ -1,13 +1,13 @@
 const { Op } = require('sequelize');
 
-const pagination = (limit, page, result, endpoint, baseUrl) => {
+const paginate = (limit, page, result, endpoint, baseUrl) => {
   const url = `${baseUrl}/${endpoint}?page=`;
   const last = Math.ceil(result.count / limit);
   const self = page;
   const prev = page === 1 ? null : page - 1;
   const next = page === last ? null : page + 1;
 
-  result.pagination = {
+  return  {
     self: url + self,
     prev: prev === null ? null : url + prev,
     next: next === null ? null : url + next,
@@ -80,9 +80,9 @@ exports.queryHelper = async (limit, page, search, searchKey, model, include, end
   });
 
 
-  pagination(limit, page, result, endpoint, baseUrl);
+  const pagination = paginate(limit, page, result, endpoint, baseUrl);
 
-  const newResult = populate(result, endpoint, baseUrl);
+  const queryResult = populate(result, endpoint, baseUrl);
 
-  return newResult;
+  return {...queryResult, ...pagination};
 };
