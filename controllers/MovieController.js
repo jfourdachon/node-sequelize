@@ -1,12 +1,14 @@
 const Movie = require('../models').Movie;
 const Genre = require('../models').Genre;
-const {paginate} = require('../utils/queryHelper');
+const Producer = require('../models').Producer;
+const { queryHelper } = require('../utils/queryHelper');
 
 class MovieController {
   async getAll(req, res) {
+    const { search, searchKey, genre } = req.query;
     const page = req.query.page ? req.query.page : 1;
     const limit = req.query.limit ? req.query.limit : 15;
-    const result = await paginate(+limit, +page, Movie, Genre, 'movies');
+    const result = await queryHelper(+limit, +page, search, searchKey, Movie, Genre, 'movies', genre);
     res.json(result);
   }
 
@@ -21,8 +23,8 @@ class MovieController {
 
   async add(req, res) {
     try {
-      const { title, description, year, genre } = req.body;
-      if (!title || !description | !year || !genre) {
+      const { title, description, year, genre, producer } = req.body;
+      if (!title || !description | !year || !genre || !producer) {
         res.status(400).end();
       }
       const checkGenre = await Genre.findByPk(+genre);
@@ -31,12 +33,21 @@ class MovieController {
         return;
       }
 
+      const checkProducer = await Producer.findByPk(+producer);
+      if (!checkProducer) {
+        res.status(404).json('Producer not exist').end();
+        return;
+      }
+
       const newMovie = await Movie.create({
         title,
         description,
         year: +year,
-        genreId: +genre
+        genreId: +genre,
+        producerId: +producer,
       });
+
+      console.log(newMovie)
 
       res.status(201).json(newMovie);
       return;
@@ -44,7 +55,7 @@ class MovieController {
       console.log(error);
     }
   }
-  
+
   async update(req, res) {
     if (!req.body.title && !req.body.description && !req.body.year) {
       res.status(404).json({ error: 'Please provide at least on parameter to update the movie' });
