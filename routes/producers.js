@@ -1,6 +1,7 @@
 const express = require('express');
 const ProducerController = require('../controllers').ProducerController;
 const Validator = require('../middlewares').Validator
+const Auth = require('../middlewares').Auth
 
 const router = express.Router();
 
@@ -12,6 +13,6 @@ router.post('/producers', Validator.createProducerRules(), Validator.validate, P
 
 router.patch('/producers/:id', Validator.updateProducerRules(), Validator.validate, ProducerController.update);
 
-router.delete('/producers/:id', ProducerController.delete)
+router.delete('/producers/:id', Auth.isAuthenticated, Auth.permission('admin'), ProducerController.delete)
 
 module.exports = router;

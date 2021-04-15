@@ -61,6 +61,7 @@ class ProducerController {
   }
 
   async delete(req, res) {
+      console.log('yo')
     try {
       const success = await Producer.destroy({ where: { id: req.params.id } });
       if (!success) {

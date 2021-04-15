@@ -56,6 +56,22 @@ class Validator {
     ];
   }
 
+  //Auth
+  signupValidator() {
+      return [
+          body('email').isEmail().withMessage('Provide a valid email'),
+          body('password').isLength({ min: 6 }).withMessage('must be at least 6 chars long'),
+          body('role').isIn(['user', 'student']).withMessage(`role must be user or student`)
+        ]
+  }
+
+  loginValidator() {
+    return [
+        body('email').isEmail().withMessage('Provide a valid email'),
+        body('password').isLength({ min: 6 }).withMessage('must be at least 6 chars long'),
+      ]
+}
+
   validate(req, res, next) {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
