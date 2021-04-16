@@ -6,7 +6,7 @@ class Validator {
     return [
       query('order').isIn(['ASC', 'DESC']).withMessage(`order must be 'ASC' or 'DESC'`).optional(),
       query('orderBy')
-        .isIn(['fistName', 'lastName'])
+        .isIn(['firstName', 'lastName'])
         .withMessage(`You can only sort by firstName or lastName`)
         .optional(),
       query('limit').isNumeric().withMessage('must be a numeric value').optional(),  

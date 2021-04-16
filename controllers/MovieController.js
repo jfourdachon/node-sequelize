@@ -44,8 +44,6 @@ class MovieController {
         producerId: +producer,
       });
 
-      console.log(newMovie)
-
       res.status(201).json(newMovie);
       return;
     } catch (error) {

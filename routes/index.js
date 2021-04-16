@@ -8,4 +8,12 @@ module.exports = function(app){
       AuthRouter,
       ProducerRouter,
   ]);
+
+  // 404 - all routes not found in others middlewares
+app.all('*', (req, res, next) => {
+    // const err = new Error(`Can't find ${req.originalUrl} on this server!!`);
+    // err.status = 'fail';
+    // err.statusCode = 404;
+    res.status(404).json({error: `Can't find ${req.originalUrl} on this server!!`});
+  });
 };

@@ -6,7 +6,7 @@ exports.isAuthenticated = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if (!token) {
-      return res.status(403).json({message: 'You have to be logged in!'});
+      return res.status(401).json({message: 'You have to be logged in!'});
     }
     const verifiedToken = jwt.decode(token, process.env.JWT_SECRET);
     console.log({ verifiedToken });
