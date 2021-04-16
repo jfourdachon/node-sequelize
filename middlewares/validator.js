@@ -43,16 +43,18 @@ class Validator {
   }
   createMovieRules() {
     return [
-      body('firstName').isLength({ min: 4 }).withMessage('must be at least 4 chars long'),
-      body('lastName').isLength({ min: 4 }).withMessage('must be at least 4 chars long'),
+      body('title').isLength({ min: 4 }).withMessage('must be at least 4 chars long'),
+      body('description').isLength({ min: 8 }).withMessage('must be at least 8 chars long'),
+      body('year').isNumeric().isLength(4).withMessage('Provide a year with 4 digits'),
     ];
   }
 
   updateMovieRules(req) {
     return [
       param('id').isNumeric().withMessage('must be a numeric value'),
-      body('firstName').isLength({ min: 4 }).withMessage('must be at least 4 chars long').optional({ nullable: true }),
-      body('lastName').isLength({ min: 4 }).withMessage('must be at least 4 chars long').optional({ nullable: true }),
+      body('title').isLength({ min: 4 }).withMessage('must be at least 4 chars long').optional(),
+      body('description').isLength({ min: 8 }).withMessage('must be at least 8 chars long').optional(),
+      body('year').isNumeric().isLength(4).withMessage('Provide a year with 4 digits').optional(),
     ];
   }
 

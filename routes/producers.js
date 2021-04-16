@@ -9,9 +9,9 @@ router.get('/producers', Validator.filterProducersRules(), Validator.validate, P
 
 router.get('/producers/:id', ProducerController.getById);
 
-router.post('/producers', Validator.createProducerRules(), Validator.validate, ProducerController.add);
+router.post('/producers', Auth.isAuthenticated, Auth.permission('admin', 'user'), Validator.createProducerRules(), Validator.validate, ProducerController.add);
 
-router.patch('/producers/:id', Validator.updateProducerRules(), Validator.validate, ProducerController.update);
+router.patch('/producers/:id', Auth.isAuthenticated, Auth.permission('admin', 'user'), Validator.updateProducerRules(), Validator.validate, ProducerController.update);
 
 router.delete('/producers/:id', Auth.isAuthenticated, Auth.permission('admin'), ProducerController.delete)
 

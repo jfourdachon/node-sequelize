@@ -13,7 +13,7 @@ class AuthController {
         },
       });
 
-      if (!email) {
+      if (!user) {
         res.status(404).json({ message: `Incorrect email or password` });
         return;
       }
