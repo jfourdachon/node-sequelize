@@ -11,6 +11,7 @@ class Validator {
         .optional(),
       query('limit').isNumeric().withMessage('must be a numeric value').optional(),  
       query('page').isNumeric().withMessage('must be a numeric value').optional(),  
+      query('searchKey').isIn(['firstName', 'lastName']).withMessage('You can only search by firstName or lastName').optional(),  
     ];
   }
   createProducerRules() {
@@ -39,6 +40,8 @@ class Validator {
       query('limit').isNumeric().withMessage('must be a numeric value').optional(),  
       query('page').isNumeric().withMessage('must be a numeric value').optional(),  
       query('genre').isNumeric().withMessage('must be a numeric value').optional(),  
+      query('searchKey').isIn(['title', 'description']).withMessage('You can only search by title or description').optional(),  
+
     ];
   }
   createMovieRules() {
@@ -46,6 +49,8 @@ class Validator {
       body('title').isLength({ min: 4 }).withMessage('must be at least 4 chars long'),
       body('description').isLength({ min: 8 }).withMessage('must be at least 8 chars long'),
       body('year').isNumeric().isLength(4).withMessage('Provide a year with 4 digits'),
+      body('genre').isNumeric().withMessage('Provide a valid  genre for this movie'),
+      body('producer').isNumeric().withMessage('Provide a valid producer for this movie'),
     ];
   }
 
