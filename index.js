@@ -2,6 +2,7 @@ require('dotenv').config();
 const bodyParser = require('body-parser');
 
 const express = require('express');
+const helmet = require("helmet");
 
 const models = require('./models');
 const routes = require('./routes');
@@ -27,6 +28,8 @@ async function main(){
 
   app.use(bodyParser.urlencoded({extended: true}))
   app.use(bodyParser.json())
+
+  app.use(helmet())
 
   routes(app);
 
