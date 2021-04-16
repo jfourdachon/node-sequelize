@@ -5,10 +5,7 @@ const { queryHelper } = require('../utils/queryHelper');
 
 class MovieController {
   async getAll(req, res) {
-    const { search, searchKey, genre,order, orderBy } = req.query;
-    const page = req.query.page ? req.query.page : 1;
-    const limit = req.query.limit ? req.query.limit : 15;
-    const result = await queryHelper(+limit, +page, search, searchKey, Movie, Genre, 'movies',order, orderBy,  genre);
+    const result = await queryHelper(req.query, Movie, Genre, 'movies');
     res.json(result);
   }
 

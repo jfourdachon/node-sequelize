@@ -7,7 +7,7 @@ const paginate = (limit, page, result, endpoint, baseUrl) => {
   const prev = page === 1 ? null : page - 1;
   const next = page === last ? null : page + 1;
 
-  return  {
+  return {
     self: url + self,
     prev: prev === null ? null : url + prev,
     next: next === null ? null : url + next,
@@ -51,10 +51,8 @@ const populate = (result, endpoint, baseUrl) => {
   return newResult;
 };
 
-exports.queryHelper = async (limit, page, search, searchKey, model, include, endpoint, order, orderBy, genre = false) => {
-  const baseUrl = 'http://localhost:3000/api';
-
-  const searchQuery =
+const handleQuery = async(search, searchKey, genre, order, orderBy, page, limit, include, model) => {
+    const searchQuery =
     search && searchKey
       ? {
           [searchKey]: {
@@ -67,22 +65,29 @@ exports.queryHelper = async (limit, page, search, searchKey, model, include, end
     searchQuery['genreId'] = +genre;
   }
 
-
   const orderQuery = order && orderBy ? [[orderBy, order]] : [];
 
-  const offset = (page - 1) * limit;
-  let result = await model.findAndCountAll({
+  const offset = (+page - 1) * +limit;
+  return await model.findAndCountAll({
     order: orderQuery,
     where: searchQuery,
     limit,
     offset,
     include: [{ model: include, attributes: ['id'] }],
   });
+}
 
+exports.queryHelper = async (query, model, include, endpoint) => {
+  const { search, searchKey, order, orderBy, genre } = query;
+  const page = query.page ? query.page : 1;
+  const limit = query.limit ? query.limit : 15;
+  const baseUrl = 'http://localhost:3000/api';
 
-  const pagination = paginate(limit, page, result, endpoint, baseUrl);
+  const result = await handleQuery(search, searchKey, +genre, order, orderBy, +page, +limit, include, model)
 
-  const queryResult = populate(result, endpoint, baseUrl);
+  const pagination = paginate(+limit, +page, result, endpoint, baseUrl);
 
-  return {...queryResult, ...pagination};
+  const populateQuery = populate(result, endpoint, baseUrl);
+
+  return { ...populateQuery, ...pagination };
 };
